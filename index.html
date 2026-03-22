@@ -13,86 +13,12 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container">
-            <span class="navbar-logo">
-                TradingOne
-            </span>
+    <div id="root"></div>
 
-            <div class="nav-links">
-                <a href="#markets">Markets</a>
-                <a href="#crypto">Crypto</a>
-                <a href="#news">News</a>
-            </div>
-
-            <div class="nav-right">
-                <button class="btn-get-started">Get Started</button>
-            </div>
-
-            <button class="mobile-menu-toggle" id="mobileMenuBtn">&#9776;</button>
-        </div>
-    </nav>
-
-
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Trade with Precision.</h1>
-            <p>The ultimate tools for market analysis, advanced charting, and real-time data to edge out the competition.</p>
-            <div class="hero-buttons">
-                <button class="btn-primary">Start Free Trial</button>
-                <button class="btn-secondary">Explore Features</button>
-            </div>
-            <p class="hero-note">No credit card required. Cancel anytime.</p>
-        </div>
-    </section>
-
-
-    <section id="markets">
-        <div class="container">
-            <h2 class="section-title">Markets</h2>
-            <p class="section-subtitle">Track stocks and indices in real-time</p>
-
-            <div class="markets-header">
-                <div class="market-tabs">
-                    <button class="market-tab active" data-tab="stocks">Stocks</button>
-                </div>
-            </div>
-
-            <table class="market-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Change</th>
-                        <th>Market Cap</th>
-                    </tr>
-                </thead>
-                <tbody id="marketTableBody"></tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="crypto">
-        <div class="container">
-            <h2 class="section-title">Cryptocurrency</h2>
-            <p class="section-subtitle">Live crypto prices and market data</p>
-            <div class="crypto-grid" id="cryptoGrid"></div>
-        </div>
-    </section>
-
-    <section id="news">
-        <div class="container">
-            <h2 class="section-title">Latest News</h2>
-            <p class="section-subtitle">Stay informed with the latest market and crypto news</p>
-            <div class="news-grid" id="newsGrid"></div>
-        </div>
-    </section>
-
-
-    <script src="js/markets.js"></script>
-    <script src="js/crypto.js"></script>
-    <script src="js/news.js"></script>
-    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" src="js/app.jsx"></script>
 
 </body>
 </html>

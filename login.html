@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradingOne — Authentication</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tradingGreen: '#00ff66',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-black text-white min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+
+    <!-- Subtle Background Elements -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black pointer-events-none"></div>
+    <div
+        class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-tradingGreen to-transparent opacity-20">
+    </div>
+
+    <div
+        class="relative z-10 w-full max-w-md bg-zinc-950/60 backdrop-blur-xl border border-zinc-800/80 p-10 rounded-2xl shadow-2xl">
+        <a href="index.html"
+            class="inline-flex items-center text-sm text-zinc-500 hover:text-white transition-colors mb-8">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                </path>
+            </svg>
+            Back to Terminal
+        </a>
+
+        <div class="flex items-center justify-center gap-2 mb-8">
+            <div class="text-3xl font-light tracking-tight text-white">TradingOne</div>
+            <div class="w-2 h-2 rounded-full bg-tradingGreen mt-2"></div>
+        </div>
+
+        <div id="message" class="hidden text-sm text-center p-3 rounded mb-6 border"></div>
+
+        <form id="authForm" class="space-y-5">
+            <div>
+                <label for="email" class="block text-sm font-medium text-zinc-400 mb-1.5">Email address</label>
+                <input type="email" id="email" required placeholder="name@institutional.com"
+                    class="w-full bg-zinc-900/50 border border-zinc-800 text-zinc-300 text-sm rounded-lg focus:ring-1 focus:ring-tradingGreen focus:border-tradingGreen block p-3 placeholder-zinc-600 transition-colors">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-zinc-400 mb-1.5">Password</label>
+                <input type="password" id="password" required placeholder="Enter secure passphrase"
+                    class="w-full bg-zinc-900/50 border border-zinc-800 text-zinc-300 text-sm rounded-lg focus:ring-1 focus:ring-tradingGreen focus:border-tradingGreen block p-3 placeholder-zinc-600 transition-colors">
+            </div>
+            <button type="submit" id="submitBtn"
+                class="w-full text-black bg-tradingGreen hover:bg-[#00e65c] font-medium rounded-lg text-sm px-5 py-3.5 text-center mt-6 transition-colors shadow-[0_0_15px_rgba(0,255,102,0.15)]">
+                Sign In to Terminal
+            </button>
+        </form>
+
+        <div class="mt-6 text-center text-sm text-zinc-500">
+            <span id="toggleText">Don't have an institutional account?</span>
+            <a id="toggleBtn" class="text-tradingGreen hover:underline cursor-pointer font-medium ml-1">Apply here</a>
+        </div>
+
+        <div class="flex items-center my-6">
+            <div class="flex-grow border-t border-zinc-800"></div>
+            <span class="flex-shrink-0 mx-4 text-zinc-600 text-xs uppercase tracking-wider font-semibold">Secure
+                Login</span>
+            <div class="flex-grow border-t border-zinc-800"></div>
+        </div>
+
+        <!-- Google Auth Wrapper -->
+        <div class="flex justify-center">
+            <div id="g_id_onload"
+                data-client_id="297667960028-l59httfag4og0fit0tphuj0staqct44k.apps.googleusercontent.com"
+                data-callback="handleGoogleResponse" data-auto_prompt="false">
+            </div>
+            <!-- Standard Google Sign-in requires white/dark themes via data-theme -->
+            <div class="g_id_signin" data-type="standard" data-theme="outline" data-text="sign_in_with"
+                data-shape="rectangular" data-logo_alignment="center">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLogin = true;
+        const API_BASE = 'http://localhost:3000/api';
+
+        const toggleBtn = document.getElementById('toggleBtn');
+        const toggleText = document.getElementById('toggleText');
+        const submitBtn = document.getElementById('submitBtn');
+        const authForm = document.getElementById('authForm');
+        const messageDiv = document.getElementById('message');
+
+        toggleBtn.addEventListener('click', () => {
+            isLogin = !isLogin;
+            submitBtn.textContent = isLogin ? 'Sign In to Terminal' : 'Register Account';
+            toggleText.textContent = isLogin ? "Don't have an institutional account?" : "Already hold an account?";
+            toggleBtn.textContent = isLogin ? 'Apply here' : 'Sign in';
+            messageDiv.classList.add('hidden');
+        });
+
+        function showMessage(msg, isError) {
+            messageDiv.textContent = msg;
+            messageDiv.className = `text-sm text-center p-3 rounded mb-6 border ${isError ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-tradingGreen/10 text-tradingGreen border-tradingGreen/20'}`;
+            messageDiv.classList.remove('hidden');
+        }
+
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const endpoint = isLogin ? '/login' : '/register';
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+                const res = await fetch(API_BASE + endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showMessage(data.error || 'Authentication failed', true);
+                } else {
+                    if (data.token) localStorage.setItem('tradingone_jwt', data.token);
+                    showMessage(data.message + ' (Connecting...)', false);
+                    setTimeout(() => window.location.href = 'terminal.html', 1500);
+                }
+            } catch (error) {
+                showMessage('Terminal connection lost. Is the backend running on port 3000?', true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        async function handleGoogleResponse(response) {
+            try {
+                const res = await fetch(API_BASE + '/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: response.credential })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showMessage(data.error || 'Identity verification failed', true);
+                } else {
+                    if (data.token) localStorage.setItem('tradingone_jwt', data.token);
+                    showMessage('Identity verified. (Connecting...)', false);
+                    setTimeout(() => window.location.href = 'terminal.html', 1500);
+                }
+            } catch (error) {
+                showMessage('Terminal connection failed during identity check.', true);
+            }
+        }
+    </script>
+</body>
+
+</html>

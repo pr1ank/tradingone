@@ -1,0 +1,29 @@
+{
+  "name": "tradingone",
+  "version": "1.0.0",
+  "description": "components: \r search button \r markets \r crypto \r news \r explore features to redirecting components.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AG0606/tradingone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AG0606/tradingone/issues"
+  },
+  "homepage": "https://github.com/AG0606/tradingone#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "google-auth-library": "^10.6.2",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite3": "^6.0.1"
+  }
+}

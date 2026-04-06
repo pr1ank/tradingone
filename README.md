@@ -1,4 +1,4 @@
-# tradingonegu
+# tradingone
 
 Components: Search button, Markets, Crypto, News, Explore features to redirecting components.
 
